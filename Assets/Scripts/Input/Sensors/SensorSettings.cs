@@ -74,20 +74,25 @@ namespace SkiGame.Sensors
         public float steerDeadZoneCm = 1.5f;
         [Tooltip("Response curve. 1 = linear. Higher = gentler for small leans, still full turn for a big lean (1.7: half lean -> ~30% turn).")]
         [Range(1f, 3f)] public float steerCurve = 1.7f;
-        [Tooltip("Lean (cm from neutral) that gives full boost / full brake. Forward-back leans reach ~7 cm.")]
-        public float speedFullScaleCm = 6f;
+        [Tooltip("Forward/back lean (cm from your centre) that gives full boost / full brake. Bigger = less sensitive.")]
+        public float speedFullScaleCm = 8f;
+        [Tooltip("Forward/back leans smaller than this (cm) do nothing. Also covers the 1.5-2 cm backward shift that happens when you lean sideways.")]
+        public float speedDeadZoneCm = 2.5f;
+        [Tooltip("Response curve for speed. 1 = linear, higher = gentler for small leans.")]
+        [Range(1f, 3f)] public float speedCurve = 1.7f;
         [Tooltip("Use forward / back lean for speed (forward = faster, back = brake).")]
         public bool copControlsSpeed = true;
 
         [Header("COP - game-side response (applied to the input smoothing)")]
         [Tooltip("Extra dead zone applied by the game after the curve (fraction). The board's own dead zone is Steer Dead Zone Cm above.")]
         [Range(0f, 0.5f)] public float steerDeadZone = 0.0f;
-        [Tooltip("Dead zone on speed. Leaning sideways also moves COP back by ~1.5-2 cm, so this is larger (0.3 x 6 cm = 1.8 cm).")]
-        [Range(0f, 0.6f)] public float speedDeadZone = 0.3f;
+        [Tooltip("Extra dead zone applied by the game after the curve (fraction). The board's own dead zone is Speed Dead Zone Cm above.")]
+        [Range(0f, 0.6f)] public float speedDeadZone = 0.0f;
         [Tooltip("Extra ramp time on steering (s). The low-pass already smooths, so this is shorter than for the keyboard.")]
         public float steerResponseTime = 0.05f;
         public float steerReleaseTime = 0.04f;
-        public float speedResponseTime = 0.15f;
+        [Tooltip("Seconds for speed control to go from 0 to full. Longer = smoother, less twitchy speed changes.")]
+        public float speedResponseTime = 0.4f;
 
         // ------------------------------------------------------------------ EMG
         [Header("EMG - source")]

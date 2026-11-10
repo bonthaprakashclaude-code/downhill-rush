@@ -11,7 +11,7 @@ namespace SkiGame.Sensors
     ///                -> glitch rejection: a jump of more than 6 cm in one sample is ignored (max 3 in a row)
     ///                -> 2nd-order Butterworth low-pass 3 Hz (keeps voluntary leans, removes jitter)
     ///                -> subtract the neutral stance (mean of the first 2 s standing still; F3 re-does it)
-    ///                -> steering: 1.5 cm dead zone, full turn at 15 cm, response curve ^1.7; speed: / 6 cm; clamp to -1..1
+    ///                -> steering: 1.5 cm dead zone, full turn at 15 cm, response curve ^1.7; speed: 2.5 cm dead zone, full at 8 cm, curve ^1.7; clamp to -1..1
     ///
     /// Then GameInputBase adds the dead zone and the short response ramp.
     /// </summary>
@@ -118,7 +118,9 @@ namespace SkiGame.Sensors
             double dx = FilteredX - NeutralX;
             double mag = Math.Max(0, Math.Abs(dx) - s.steerDeadZoneCm) / Math.Max(0.1, s.steerFullScaleCm - s.steerDeadZoneCm);
             Steer = Clamp(Math.Sign(dx) * Math.Pow(Math.Min(1.0, mag), Math.Max(1.0, s.steerCurve)));
-            Speed = s.copControlsSpeed ? Clamp((FilteredY - NeutralY) / Math.Max(0.1, s.speedFullScaleCm)) : 0f;
+            double dy = FilteredY - NeutralY;
+            double magY = Math.Max(0, Math.Abs(dy) - s.speedDeadZoneCm) / Math.Max(0.1, s.speedFullScaleCm - s.speedDeadZoneCm);
+            Speed = s.copControlsSpeed ? Clamp(Math.Sign(dy) * Math.Pow(Math.Min(1.0, magY), Math.Max(1.0, s.speedCurve))) : 0f;
         }
 
         /// <summary>Uses a known neutral position (e.g. carried over a Restart) instead of measuring it.</summary>

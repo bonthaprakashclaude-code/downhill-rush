@@ -245,9 +245,9 @@ The game's 0.12 s coyote time and 0.13 s input buffer cover most of the EMG dela
 | COP | stale timeout | 0.5 s |
 | COP | neutral | mean of the first 2 s |
 | COP | steering | dead zone 1.5 cm, full turn at 15 cm, response curve ^1.7 (5 cm lean ≈ 10 % turn, 10 cm ≈ 45 %) |
-| COP | speed full scale | 6 cm |
+| COP | speed (forward/back) | dead zone 2.5 cm, full at 8 cm, response curve ^1.7 (4 cm ≈ 11 %, 6 cm ≈ 46 %), 0.4 s ramp |
 | Game | steer ramp / release | 0.05 s / 0.04 s |
-| Game | speed dead zone / ramp | 0.30 / 0.15 s |
+| Game | speed ramp | 0.4 s |
 
 Re-run the analysis on new recordings with:
 
