@@ -187,6 +187,13 @@ The game's 0.12 s coyote time and 0.13 s input buffer cover most of the EMG dela
    - First time only: `py -m pip install pythonnet matplotlib`.
 4. Open the project in Unity and press **Play**.
 
+**Steering with the board is continuous.** Your lean is read every frame (about 85 times a second from the board), and the skier's direction follows it in real time:
+- centred means straight downhill;
+- a 6 cm lean right means angled half-way right;
+- a 12 cm lean means fully across.
+
+There is no on/off threshold like the EMG. (`Lean Sets Direction` in the settings; untick it for the old "keep turning while you lean" behaviour.)
+
 **In the game:**
 5. Check the status bar at the bottom-left: **LIVE · EMG ● bridge · COP ● board**. Green means data is arriving.
 6. Step on the board and **stand still** until the "STAND STILL" message disappears (2 s). This finds your centre.
@@ -244,7 +251,8 @@ The game's 0.12 s coyote time and 0.13 s input buffer cover most of the EMG dela
 | COP | minimum weight | 20 kg |
 | COP | stale timeout | 0.5 s |
 | COP | neutral | mean of the first 2 s |
-| COP | steering | dead zone 1.5 cm, full turn at 15 cm, response curve ^1.7 (5 cm lean ≈ 10 % turn, 10 cm ≈ 45 %) |
+| COP | steering (default: **lean sets direction**) | continuous and linear, **no threshold**: heading = lean / 12 cm × 60°, followed at up to 150 °/s. Centred = straight downhill. |
+| COP | steering (option: lean sets turn rate) | dead zone 1.5 cm, full turn at 15 cm, response curve ^1.7 |
 | COP | speed (forward/back) | dead zone 2.5 cm, full at 8 cm, response curve ^1.7 (4 cm ≈ 11 %, 6 cm ≈ 46 %), 0.4 s ramp |
 | Game | steer ramp / release | 0.05 s / 0.04 s |
 | Game | speed ramp | 0.4 s |

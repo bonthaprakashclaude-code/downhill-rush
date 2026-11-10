@@ -65,10 +65,18 @@ namespace SkiGame.Sensors
         [Tooltip("If the live file stops updating for this long (s) the input goes to neutral.")]
         public float copStaleTimeout = 0.5f;
 
+        [Header("COP - steering mode")]
+        [Tooltip("ON (default): your lean sets the skier's DIRECTION continuously - centred = straight, lean = angle, in real time.\nOFF: your lean sets a TURN RATE (keeps turning while you lean, like the keyboard).")]
+        public bool leanSetsDirection = true;
+        [Tooltip("Direction mode: lean (cm from your centre) that points the skier fully across (max heading, 60 deg). Linear, no threshold.")]
+        public float directionFullScaleCm = 12f;
+        [Tooltip("Direction mode: how fast the skier turns to follow your lean (deg/s). Lower = smoother, higher = snappier.")]
+        public float headingFollowRate = 150f;
+
         [Header("COP - calibration and scaling")]
         [Tooltip("Seconds of quiet standing averaged at the start to find the neutral (centre) position. F3 re-does it.")]
         public float copNeutralSeconds = 2f;
-        [Tooltip("Lean (cm from your centre) that gives FULL steering. Bigger = less sensitive.")]
+        [Tooltip("Turn-rate mode only: lean (cm from your centre) that gives FULL turn rate. Bigger = less sensitive.")]
         public float steerFullScaleCm = 15f;
         [Tooltip("Leans smaller than this (cm) do not steer at all - standing sway and small weight shifts are ignored.")]
         public float steerDeadZoneCm = 1.5f;

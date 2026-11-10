@@ -23,4 +23,16 @@ namespace SkiGame
         /// <summary>True for exactly ONE frame when a backflip is requested (discrete trigger with cooldown).</summary>
         bool BackflipTriggered { get; }
     }
+
+    /// <summary>
+    /// Optional, for proportional devices (Wii Balance Board): when SteerSetsHeading is true,
+    /// Steer is the skier's DIRECTION (-1 = full left .. +1 = full right of straight downhill),
+    /// followed continuously, instead of a turn rate.
+    /// </summary>
+    public interface IDirectSteering
+    {
+        bool SteerSetsHeading { get; }
+        /// <summary>How fast the skier's heading follows the target direction (degrees / second).</summary>
+        float HeadingFollowRate { get; }
+    }
 }

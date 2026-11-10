@@ -19,8 +19,13 @@ namespace SkiGame.Sensors
     /// </summary>
     [DefaultExecutionOrder(-100)]
     [AddComponentMenu("Ski Game/Input/Sensor Input (EMG + COP)")]
-    public class SensorInput : GameInputBase
+    public class SensorInput : GameInputBase, IDirectSteering
     {
+        // IDirectSteering: the board sets the direction; the keyboard (when pressed) keeps turn-rate steering.
+        public bool SteerSetsHeading => Settings != null && Settings.leanSetsDirection && CopRunning && !keyboardSteering;
+        public float HeadingFollowRate => Settings != null ? Settings.headingFollowRate : 150f;
+        private bool keyboardSteering;
+
         public enum CalibrationPhase { None, Relax, FlexJump, FlexBackflip, Done }
 
         /// <summary>Runtime copy of the settings (F6 changes this copy, never the asset).</summary>
@@ -496,7 +501,8 @@ namespace SkiGame.Sensors
         protected override float ReadSteer()
         {
             float k = KeyAxis(LeftKeys, RightKeys);
-            if (k != 0f || !CopRunning) return k;
+            keyboardSteering = k != 0f || !CopRunning;
+            if (keyboardSteering) return k;
             return Cop.Steer;
         }
 

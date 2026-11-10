@@ -232,9 +232,19 @@ namespace SkiGame
             }
             else
             {
-                // GRADUAL STEERING: input sets the TURN RATE, not the heading.
-                // Hold right -> keep turning right; let go -> keep the current heading.
-                yaw += steerValue * settings.steerTurnRate * authority * dt;
+                if (input is IDirectSteering direct && direct.SteerSetsHeading)
+                {
+                    // DIRECT STEERING (balance board): the lean IS the direction, continuously.
+                    // Centred = straight downhill; lean right = angled right, proportional to the lean.
+                    float target = steerValue * settings.maxHeadingAngle;
+                    yaw = Mathf.MoveTowards(yaw, target, direct.HeadingFollowRate * authority * dt);
+                }
+                else
+                {
+                    // GRADUAL STEERING (keyboard): input sets the TURN RATE, not the heading.
+                    // Hold right -> keep turning right; let go -> keep the current heading.
+                    yaw += steerValue * settings.steerTurnRate * authority * dt;
+                }
             }
             // Never ski sideways or uphill: limit the heading relative to straight downhill.
             yaw = Mathf.Clamp(yaw, -settings.maxHeadingAngle, settings.maxHeadingAngle);

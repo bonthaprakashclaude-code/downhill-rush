@@ -114,10 +114,18 @@ namespace SkiGame.Sensors
                 Steer = Speed = 0f;
                 return;
             }
-            // Dead zone in cm, then a response curve: small leans steer gently, a big lean still gives full turn.
             double dx = FilteredX - NeutralX;
+            if (s.leanSetsDirection)
+            {
+                // Direction mode: continuous and linear, no threshold - the lean maps straight to the heading.
+                Steer = Clamp(dx / Math.Max(0.1, s.directionFullScaleCm));
+            }
+            else
+            {
+            // Turn-rate mode: dead zone in cm, then a response curve (small leans turn gently).
             double mag = Math.Max(0, Math.Abs(dx) - s.steerDeadZoneCm) / Math.Max(0.1, s.steerFullScaleCm - s.steerDeadZoneCm);
             Steer = Clamp(Math.Sign(dx) * Math.Pow(Math.Min(1.0, mag), Math.Max(1.0, s.steerCurve)));
+            }
             double dy = FilteredY - NeutralY;
             double magY = Math.Max(0, Math.Abs(dy) - s.speedDeadZoneCm) / Math.Max(0.1, s.speedFullScaleCm - s.speedDeadZoneCm);
             Speed = s.copControlsSpeed ? Clamp(Math.Sign(dy) * Math.Pow(Math.Min(1.0, magY), Math.Max(1.0, s.speedCurve))) : 0f;
